@@ -1,0 +1,44 @@
+{% extends 'base/master.html.twig' %}
+
+{% block fullTitle '/v/3 OBS Overlay' %}
+
+{% block head %}
+  <style type="text/css">
+    .middle {
+      top: 50%;
+      transform: translate(-50%,-50%);
+      left: 50%;
+      position: absolute;
+    }
+
+    .rappin {
+      display: none;
+    }
+  </style>
+
+  <script type="text/javascript">
+    setInterval(changeImage, 1000);
+
+    var activeRappin = 4;
+
+    function changeImage() {
+        $('.rappin').hide();
+
+        activeRappin++;
+        if (activeRappin > 4) {
+            activeRappin = 1;
+        }
+
+        $('#rappin' + activeRappin).show();
+    }
+  </script>
+{% endblock %}
+
+{% block body %}
+  <div class="middle">
+    <img src="{{ asset('img/u-rappin-1.png') }}" id="rappin1" class="rappin">
+    <img src="{{ asset('img/u-rappin-2.png') }}" id="rappin2" class="rappin">
+    <img src="{{ asset('img/u-rappin-3.png') }}" id="rappin3" class="rappin">
+    <img src="{{ asset('img/u-rappin-4.png') }}" id="rappin4" class="rappin">
+  </div>
+{% endblock %}

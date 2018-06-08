@@ -28,7 +28,7 @@
                 <p class="help-block">This can't currently be changed. It's the same timezone that 4chan uses.</p>
               </div>
             </div>
-            <div class="form-group">
+            {#<div class="form-group">
               <label for="votingStart" class="col-sm-4 control-label">Voting start</label>
               <div class="col-sm-8">
                 <input type="text" class="form-control" id="votingStart" name="votingStart"
@@ -45,7 +45,7 @@
                        placeholder="yyyy-mm-dd hh:mm:ss">
                 <p class="help-block">Leaving this blank will keep voting open indefinitely</p>
               </div>
-            </div>
+            </div>#}
             <div class="form-group">
               <label for="streamTime" class="col-sm-4 control-label">Stream time</label>
               <div class="col-sm-8">
@@ -73,7 +73,7 @@
             <div class="form-group">
               <label for="navigationMenu" class="col-sm-4 control-label">Navigation menu</label>
               <div class="col-sm-8">
-                <textarea class="form-control" rows="9" id="navigationMenu" name="navigationMenu">
+                <textarea class="form-control" rows="4" id="navigationMenu" name="navigationMenu">
                   {{- navigationBarConfig -}}
                 </textarea>
                 <p class="help-block">
@@ -104,7 +104,8 @@
                 <p class="help-block">The pages listed below will not be publicly accessible unless they are
                   checked.</p>
                 {# Note: parameters to isPagePublic must match the route name for those pages. #}
-                <div class="checkbox">
+
+                {#<div class="checkbox">
                   <label>
                     <input type="checkbox"
                            name="publicPages[videoGames]" {{ config.isPagePublic('videoGames') ? 'checked' : '' }}>
@@ -134,7 +135,7 @@
                       <small>Checking this box does not open voting: use the settings on the left for that.</small>
                     </p>
                   </label>
-                </div>
+                </div>#}
                 <div class="checkbox">
                   <label>
                     <input type="checkbox"
@@ -159,7 +160,7 @@
                     <a href="{{ path('finished') }}" target="_blank">Post-stream "thank you" page</a>
                   </label>
                 </div>
-                <div class="checkbox">
+                {#<div class="checkbox">
                   <label>
                     <input type="checkbox"
                            name="publicPages[credits]" {{ config.isPagePublic('credits') ? 'checked' : '' }}>
@@ -185,10 +186,10 @@
                       </small>
                     </p>
                   </label>
-                </div>
+                </div>#}
               </div>
             </div>
-            <div class="form-group">
+            {#<div class="form-group">
               <label class="col-sm-4 control-label">Other settings</label>
               <div class="col-sm-8">
                 <div class="checkbox">
@@ -199,7 +200,7 @@
                   </label>
                 </div>
               </div>
-            </div>
+            </div>#}
           </div>
         </div>
 

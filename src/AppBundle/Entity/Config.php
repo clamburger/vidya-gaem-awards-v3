@@ -7,13 +7,13 @@ use Moment\Moment;
 class Config
 {
     const ALLOWED_DEFAULT_PAGES = [
-        'home' => 'Standard landing page',
-        'awards' => 'Awards and Nominations',
-        'voting' => 'Voting page',
+//        'home' => 'Standard landing page',
+//        'awards' => 'Awards and Nominations',
+//        'voting' => 'Voting page',
         'countdown' => 'Stream countdown',
         'stream' => 'Stream page',
         'finished' => 'Post-stream "thank you" page',
-        'promo' => 'Special promo page',
+//        'promo' => 'Special promo page',
     ];
 
     const DEFAULT_TIMEZONE = 'America/New_York';

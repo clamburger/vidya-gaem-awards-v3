@@ -57,6 +57,10 @@ class LauncherController extends Controller
 
     public function streamAction(ConfigService $configService)
     {
+        if ($this->container->has('profiler')) {
+            $this->container->get('profiler')->disable();
+        }
+
         $streamDate = $configService->getConfig()->getStreamTime();
         $showCountdown = ($streamDate > new \DateTime());
 

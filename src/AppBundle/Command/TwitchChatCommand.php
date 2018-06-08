@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class TwitchChatCommand extends ContainerAwareCommand
 {
-    const CHANNEL = '#clamburger_';
+    const CHANNEL = '#rocketleague';
 
     private $em;
 

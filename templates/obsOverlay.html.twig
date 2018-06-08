@@ -14,31 +14,72 @@
     .rappin {
       display: none;
     }
+
+    .rappin.show {
+      display: block;
+    }
+
+    #sentiment {
+      text-align: center;
+      font-size: 50px;
+      color: white;
+      -webkit-text-stroke: 2px black;
+      text-shadow: 3px 3px black;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    #sentiment.positive {
+      color: #B2FF59;
+    }
+
+    #sentiment.negative {
+      color: #ff5252;
+    }
   </style>
 
   <script type="text/javascript">
-    setInterval(changeImage, 1000);
+    setInterval(updateSentiment, 5000);
 
-    var activeRappin = 4;
+    activeRappin = 0;
 
-    function changeImage() {
-        $('.rappin').hide();
+    function updateSentiment() {
+        $.get('{{ path('sentimentAjax') }}', function (data) {
+            var sentiment = $('#sentiment');
 
-        activeRappin++;
-        if (activeRappin > 4) {
-            activeRappin = 1;
-        }
+            sentiment.text(data.sentiment).removeClass('negative positive');
+            if (data.sentiment < 0) {
+                sentiment.addClass('negative');
+            } else if (data.sentiment > 0) {
+                sentiment.addClass('positive');
+            }
 
-        $('#rappin' + activeRappin).show();
+            $('.rappin').removeClass('show');
+            if (data.sentiment > 50) {
+                $('#rappin4').addClass('show');
+            } else if (data.sentiment > 0) {
+                $('#rappin3').addClass('show');
+            } else if (data.sentiment < -50) {
+                $('#rappin1').addClass('show');
+            } else if (data.sentiment < 0) {
+                $('#rappin2').addClass('show');
+            } else {
+                $('#rappin0').addClass('show');
+            }
+        });
     }
   </script>
 {% endblock %}
 
 {% block body %}
   <div class="middle">
+    <img src="{{ asset('img/u-rappin-0.png') }}" id="rappin0" class="rappin show">
     <img src="{{ asset('img/u-rappin-1.png') }}" id="rappin1" class="rappin">
     <img src="{{ asset('img/u-rappin-2.png') }}" id="rappin2" class="rappin">
     <img src="{{ asset('img/u-rappin-3.png') }}" id="rappin3" class="rappin">
     <img src="{{ asset('img/u-rappin-4.png') }}" id="rappin4" class="rappin">
+    <div id="sentiment">
+      0
+    </div>
   </div>
 {% endblock %}

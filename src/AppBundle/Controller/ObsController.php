@@ -34,10 +34,12 @@ class ObsController extends Controller
             ->where('cm.date >= :date')
             ->setParameter('date', '-30 seconds')
             ->getQuery()
-            ->getResult();
+            ->getSingleScalarResult();
+
+        $sentiment = random_int(-100, 100);
 
         return $this->json([
-            'sentiment' => $sentiment,
+            'sentiment' => (int)$sentiment,
         ]);
     }
 }

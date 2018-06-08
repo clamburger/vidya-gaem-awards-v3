@@ -319,5 +319,4 @@ obsOverlay:
 
 sentimentAjax:
     path:     /obs/sentiment
-    methods:  [POST]
     defaults: { _controller: AppBundle:Obs:getSentiment }

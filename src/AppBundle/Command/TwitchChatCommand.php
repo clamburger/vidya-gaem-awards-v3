@@ -58,7 +58,7 @@ class TwitchChatCommand extends ContainerAwareCommand
 
         $bot->on('join:' . $twitchUser, function ($e, Bot $bot) use ($output) {
             $output->writeln('Channel ' . self::CHANNEL . ' joined.');
-            $bot->chat(self::CHANNEL, 'Reactor online. Sensors online. Weapons online. All systems nominal.');
+//            $bot->chat(self::CHANNEL, 'Reactor online. Sensors online. Weapons online. All systems nominal.');
         });
 
         $bot->on('message', [$this, 'messageReceived']);
@@ -81,6 +81,9 @@ class TwitchChatCommand extends ContainerAwareCommand
             ->setUser($sender)
             ->setMessage($text)
             ->setSentiment(self::analyseSentiment($text));
+
+        $this->em->persist($chatMessage);
+        $this->em->flush();
     }
 
     public function analyseSentiment(string $message)

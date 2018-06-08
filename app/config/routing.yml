@@ -314,5 +314,10 @@ configPost:
 #
 
 obsOverlay:
-    path:     /obs-overlay
-    defaults: { _controller: AppBundle:V3:obsOverlay }
+    path:     /obs/overlay
+    defaults: { _controller: AppBundle:Obs:overlay }
+
+sentimentAjax:
+    path:     /obs/sentiment
+    methods:  [POST]
+    defaults: { _controller: AppBundle:Obs:getSentiment }

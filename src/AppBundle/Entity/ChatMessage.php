@@ -68,7 +68,7 @@ class ChatMessage
         return $this->message;
     }
 
-    public function setSentiment(int $sentiment): ChatMessage
+    public function setSentiment(?int $sentiment): ChatMessage
     {
         $this->sentiment = $sentiment;
         return $this;

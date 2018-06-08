@@ -68,12 +68,21 @@ class TwitchChatCommand extends ContainerAwareCommand
 
     public function messageReceived($e, Bot $bot)
     {
-        if ($e->message['args'][0] !== self::CHANNEL) {
+        $this->output->writeln('    ' . $e->raw);
+
+        if ($e->message->args[0] !== self::CHANNEL || $e->message->command !== Bot::CMD_PRIVMSG) {
             return;
         }
 
-        $sender = $e->message['nick'];
-        $text = $e->message['args'][1];
+        if (!isset($e->message->args[1])) {
+            dump('Unexpected message');
+            dump($e->raw);
+            dump($e->message);
+            return;
+        }
+
+        $sender = $e->message->nick;
+        $text = $e->message->args[1];
 
         $chatMessage = new ChatMessage();
         $chatMessage

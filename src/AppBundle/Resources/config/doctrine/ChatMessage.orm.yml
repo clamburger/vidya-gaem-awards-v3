@@ -1,0 +1,21 @@
+AppBundle\Entity\ChatMessage:
+  type: entity
+  table: chat_messages
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    date:
+      type: datetime
+      nullable: false
+    user:
+      type: string
+      nullable: false
+    message:
+      type: string
+      nullable: false
+    sentiment:
+      type: integer
+      nullable: true

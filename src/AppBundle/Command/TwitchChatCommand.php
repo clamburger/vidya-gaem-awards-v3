@@ -1,9 +1,10 @@
 <?php
 namespace AppBundle\Command;
 
+use AppBundle\Entity\ChatMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Irc\Bot;
-use Psr\Log\LoggerInterface;
+use Irc\Message;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -47,26 +48,43 @@ class TwitchChatCommand extends ContainerAwareCommand
         $bot->setServerPassword($twitchPassword);
 
         $bot->on('connected', function ($e, Bot $bot) use ($output) {
-            ('Connected');
+            $output->writeln('Connected.');
         });
 
-        $bot->on('message', function ($e, Bot $bot) {
-//            dump('Message');
-            dump($e->raw);
-        });
-
-        $bot->on('welcome', function ($e, Bot $bot) {
-            dump('Welcome!');
+        $bot->on('welcome', function ($e, Bot $bot) use ($output) {
+            $output->writeln('Welcome message received.');
             $bot->join(self::CHANNEL);
-            $bot->send('PRIVMSG', self::CHANNEL, '/v/3 bot connected.');
         });
+
+        $bot->on('join:' . $twitchUser, function ($e, Bot $bot) use ($output) {
+            $output->writeln('Channel ' . self::CHANNEL . ' joined.');
+            $bot->chat(self::CHANNEL, 'Reactor online. Sensors online. Weapons online. All systems nominal.');
+        });
+
+        $bot->on('message', [$this, 'messageReceived']);
 
         $bot->connect();
     }
 
-    public function messageReceived(array $message, WriteStream $write, ConnectionInterface $connection, LoggerInterface $logger)
+    public function messageReceived($e, Bot $bot)
     {
-        $this->output->writeln('Message received.');
-        dump($message);
+        if ($e->message['args'][0] !== self::CHANNEL) {
+            return;
+        }
+
+        $sender = $e->message['nick'];
+        $text = $e->message['args'][1];
+
+        $chatMessage = new ChatMessage();
+        $chatMessage
+            ->setDate(\DateTime::createFromFormat('U', $e->time))
+            ->setUser($sender)
+            ->setMessage($text)
+            ->setSentiment(self::analyseSentiment($text));
+    }
+
+    public function analyseSentiment(string $message)
+    {
+        return null;
     }
 }

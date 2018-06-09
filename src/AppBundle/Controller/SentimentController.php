@@ -102,7 +102,7 @@ class SentimentController extends Controller
                 continue;
             }
 
-            $rules[] = [trim($rule[0]), $number];
+            $rules[] = [trim(strtolower($rule[0])), $number];
         }
 
         return $rules;

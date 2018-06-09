@@ -18,6 +18,8 @@ class AuditLogController extends Controller
             'user-added' => 'Added a user to the team',
             'config-updated' => 'Updated the website config',
             'sentiment-rules-updated' => 'Updated the sentiment rules',
+            'supervisor-started' => 'Started the Twitch chat monitoring process',
+            'supervisor-stopped' => 'Stopped the Twitch chat monitoring process',
         ];
 
         $result = $em->createQueryBuilder()

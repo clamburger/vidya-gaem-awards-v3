@@ -1,11 +1,49 @@
 {% extends 'base/standard.html.twig' %}
 
+{% block head %}
+  <style type="text/css">
+    #chat_embed {
+      border: 1px solid silver;
+    }
+    .status-block {
+      background-color: #F1EDEE;
+      border: 1px solid silver;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
   <h1 class="page-header">Twitch Chat Monitor</h1>
 
   <div class="row">
-    <div class="col-xs-12">
-      
+    <div class="col-md-8">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="status-block">
+            <strong><code>{{ supervisorInfo.name }}</code></strong><br>
+            <code>{{ supervisorInfo.description }}</code>
+            <div class="h4">
+              <span class="label label-{{ running ? 'success' : 'danger' }}">{{ supervisorInfo.statename }}</span>
+            </div>
+          </div>
+          <form action="{{ path('updateSupervisorState') }}" method="POST">
+            <input type="hidden" name="action" value="{{ running ? 'stop' : 'start' }}">
+            <button class="btn btn-default" type="submit">{{ running ? 'Stop process' : 'Start process' }}</button>
+          </form>
+        </div>
+      </div>
     </div>
+    <div class="col-md-4">
+      <iframe frameborder="0"
+              scrolling="no"
+              id="chat_embed"
+              src="https://www.twitch.tv/embed/vidyagaemawards/chat"
+              height="600"
+              width="100%">
+      </iframe>
+    </div>
+
   </div>
 {% endblock %}

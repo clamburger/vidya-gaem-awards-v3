@@ -20,3 +20,6 @@ parameters:
 
     twitch_user: ~
     twitch_password: ~
+
+    supervisor_user: ~
+    supervisor_password: ~

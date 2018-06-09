@@ -136,3 +136,8 @@ sentimentAnalysisPost:
 twitchChat:
     path:     /twitch-chat
     defaults: { _controller: AppBundle:Twitch:index }
+
+updateSupervisorState:
+    path:     /twitch-chat/supervisor
+    methods:  [POST]
+    defaults: { _controller: AppBundle:Twitch:updateSupervisorState }

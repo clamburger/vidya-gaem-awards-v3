@@ -16,53 +16,6 @@ login_check:
 logout:
     path:     /logout
 
-
-#
-# FRONT PAGE
-#
-
-#home:
-#    path:     /home
-#    defaults: { _controller: AppBundle:Index:index }
-#
-#promo:
-#    path:     /promo
-#    defaults: { _controller: AppBundle:Index:promo }
-
-
-#
-# NEWS
-#
-
-#news:
-#    path:     /news
-#    defaults: { _controller: AppBundle:News:index }
-#
-#newsAdd:
-#    path:     /news/add
-#    defaults: { _controller: AppBundle:News:add }
-#    methods:  [POST]
-#
-#newsDelete:
-#    path:     /news/delete/{id}
-#    defaults: { _controller: AppBundle:News:delete }
-#    methods:  [POST]
-#    requirements:
-#        id: '\d+'
-
-#
-# VIDEO GAMES
-#
-#videoGames:
-#    path:     /vidya-in-2017
-#    defaults: { _controller: AppBundle:VideoGames:index }
-#    methods:  [GET]
-#
-#addVideoGame:
-#    path:     /vidya-in-2017
-#    defaults: { _controller: AppBundle:VideoGames:add }
-#    methods:  [POST]
-
 #
 # CREW
 #
@@ -105,111 +58,6 @@ editPersonPost:
         steamID: '\d+'
 
 #
-# AWARDS
-#
-
-#awards:
-#    path:     /awards
-#    methods:  [GET]
-#    defaults: { _controller: AppBundle:Award:index }
-#
-#awardFrontendPost:
-#    path:     /awards
-#    methods:  [POST]
-#    defaults: { _controller: AppBundle:Award:post }
-#
-#awardManager:
-#    path:     /awards/manage
-#    methods:  [GET]
-#    defaults: { _controller: AppBundle:AwardAdmin:managerList }
-#
-#awardManagerPost:
-#    path:     /awards/manage
-#    methods:  [POST]
-#    defaults: { _controller: AppBundle:AwardAdmin:managerPost }
-#
-#awardManagerPostAjax:
-#    path:     /awards/manage/ajax
-#    methods:  [POST]
-#    defaults: { _controller: AppBundle:AwardAdmin:managerPostAjax }
-#
-#nomineeManager:
-#    path:     /nominees/{awardID}
-#    methods:  [GET]
-#    defaults: { _controller: AppBundle:Nominee:index, awardID: null }
-#
-#nomineePost:
-#    path:     /nominees/{awardID}
-#    methods:  [POST]
-#    defaults: { _controller: AppBundle:Nominee:post }
-
-#
-# TASKS
-#
-
-#tasks:
-#    path:     /tasks
-#    methods:  [GET]
-#    defaults: { _controller: AppBundle:Tasks:index }
-#
-#tasksImageCheck:
-#    path:     /tasks/check-images
-#    defaults: { _controller: AppBundle:Tasks:imageCheck }
-#
-#tasksPost:
-#    path:     /tasks
-#    methods:  [POST]
-#    defaults: { _controller: AppBundle:Tasks:post }
-
-#
-# VOTING
-#
-
-#viewVotingCode:
-#    path:     /vote/code
-#    defaults: { _controller: AppBundle:Voting:codeViewer }
-#
-#voting:
-#    path:     /vote/{awardID}
-#    methods:  [GET]
-#    defaults: { _controller: AppBundle:Voting:index, awardID: null }
-#
-#votingSubmission:
-#    path:     /vote/{awardID}
-#    methods:  [POST]
-#    defaults: { _controller: AppBundle:Voting:post }
-#
-#voteWithCode:
-#    path:     /vote/v/{code}
-#    defaults: { _controller: AppBundle:Voting:codeEntry }
-#    requirements:
-#        code: '.+'
-
-#
-# RESULTS
-#
-
-#winners:
-#    path:     /winners
-#    methods:  [GET]
-#    defaults: { _controller: AppBundle:Result:simple }
-#
-#winnerImageUpload:
-#    path:     /winners
-#    methods:  [POST]
-#    defaults: { _controller: AppBundle:Result:winnerImageUpload }
-#
-#results:
-#    path:     /results/{all}
-#    defaults: { _controller: AppBundle:Result:detailed, 'all': null }
-#    requirements:
-#        all: '(all)?'
-#
-#pairwiseResults:
-#    path:     /results/pairwise
-#    defaults: { _controller: AppBundle:Result:pairwise }
-
-#
 # REFERRERS
 #
 
@@ -249,22 +97,6 @@ privacy:
     path:     /privacy
     defaults: { _controller: FrameworkBundle:Template:template, template: 'privacy.html.twig' }
 
-#videos:
-#    path:     /videos
-#    defaults: { _controller: FrameworkBundle:Template:template, template: 'videos.html.twig' }
-#
-#soundtrack:
-#    path:     /soundtrack
-#    defaults: { _controller: FrameworkBundle:Template:template, template: 'soundtrack.html.twig' }
-#
-#credits:
-#    path:     /credits
-#    defaults: { _controller: FrameworkBundle:Template:template, template: 'credits.html.twig' }
-#
-#resultRedirect:
-#    path:     /voting/results
-#    defaults: { _controller: FrameworkBundle:Redirect:redirect, route: 'results' }
-
 #
 # CONFIG
 #
@@ -278,36 +110,6 @@ configPost:
     path:     /config
     methods:  [POST]
     defaults: { _controller: AppBundle:Config:post }
-
-#
-# SPECIAL
-#
-
-#itemManager:
-#    path:     /lootboxes
-#    methods:  [GET]
-#    defaults: { _controller: AppBundle:ItemManager:index }
-#
-#itemPost:
-#    path:     /lootboxes
-#    methods:  [POST]
-#    defaults: { _controller: AppBundle:ItemManager:post }
-#
-#advertManager:
-#    path:     /adverts
-#    defaults: { _controller: AppBundle:AdvertManager:index }
-#    methods:  [GET]
-#
-#advertPost:
-#    path:     /adverts
-#    methods:  [POST]
-#    defaults: { _controller: AppBundle:AdvertManager:post }
-#
-#advertRedirect:
-#    path:     /link/{advertToken}
-#    defaults: { _controller: AppBundle:AdvertManager:redirect }
-#    requirements:
-#        advertToken: '^[0-9a-f]+$'
 
 #
 # /V/3

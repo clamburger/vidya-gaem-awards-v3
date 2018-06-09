@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class TwitchChatCommand extends ContainerAwareCommand
 {
-    const CHANNEL = '#rocketleague';
+    const CHANNEL = '#vidyagaemawards';
 
     private $em;
 
@@ -58,7 +58,7 @@ class TwitchChatCommand extends ContainerAwareCommand
 
         $bot->on('join:' . $twitchUser, function ($e, Bot $bot) use ($output) {
             $output->writeln('Channel ' . self::CHANNEL . ' joined.');
-//            $bot->chat(self::CHANNEL, 'Reactor online. Sensors online. Weapons online. All systems nominal.');
+            $bot->chat(self::CHANNEL, 'Reactor online. Sensors online. Weapons online. All systems nominal.');
         });
 
         $bot->on('message', [$this, 'messageReceived']);
@@ -97,6 +97,13 @@ class TwitchChatCommand extends ContainerAwareCommand
 
     public function analyseSentiment(string $message)
     {
+        $message = strtolower($message);
+        if ($message === '!shit') {
+            return -100;
+        } elseif ($message === '!hype') {
+            return 100;
+        }
+
         return null;
     }
 }

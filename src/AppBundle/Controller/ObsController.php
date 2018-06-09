@@ -28,15 +28,14 @@ class ObsController extends Controller
 
     public function getSentimentAction(EntityManagerInterface $em)
     {
+        // To determine the sentiment, we use a linear weighted rolling average of the past two minutes.
         $sentiment = $em->createQueryBuilder()
-            ->select('AVG(cm.sentiment)')
+            ->select('AVG((120 - TIMESTAMPDIFF(SECOND, cm.date, CURRENT_TIMESTAMP()) * cm.sentiment))')
             ->from(ChatMessage::class, 'cm')
             ->where('cm.date >= :date')
-            ->setParameter('date', '-30 seconds')
+            ->setParameter('date', '-120 seconds')
             ->getQuery()
             ->getSingleScalarResult();
-
-        $sentiment = random_int(-100, 100);
 
         return $this->json([
             'sentiment' => (int)$sentiment,

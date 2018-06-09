@@ -48,9 +48,6 @@ AppBundle\Entity\User:
       type: text
       nullable: true
   oneToMany:
-    votes:
-      targetEntity: Vote
-      mappedBy: user
     logins:
       targetEntity: Login
       mappedBy: user

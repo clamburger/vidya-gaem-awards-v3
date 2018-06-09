@@ -66,11 +66,6 @@ class User implements SteamUserInterface, UserInterface
     /**
      * @var Collections\Collection
      */
-    private $votes;
-
-    /**
-     * @var Collections\Collection
-     */
     private $permissions;
 
     /**
@@ -100,7 +95,6 @@ class User implements SteamUserInterface, UserInterface
 
     public function __construct()
     {
-        $this->votes = new Collections\ArrayCollection();
         $this->permissions = new Collections\ArrayCollection();
         $this->logins = new Collections\ArrayCollection();
     }
@@ -343,40 +337,6 @@ class User implements SteamUserInterface, UserInterface
     public function getAvatar()
     {
         return $this->avatar;
-    }
-
-    /**
-     * Add vote
-     *
-     * @param Vote $vote
-     *
-     * @return User
-     */
-    public function addVote(Vote $vote)
-    {
-        $this->votes[] = $vote;
-
-        return $this;
-    }
-
-    /**
-     * Remove vote
-     *
-     * @param Vote $vote
-     */
-    public function removeVote(Vote $vote)
-    {
-        $this->votes->removeElement($vote);
-    }
-
-    /**
-     * Get votes
-     *
-     * @return Collections\Collection
-     */
-    public function getVotes()
-    {
-        return $this->votes;
     }
 
     /**

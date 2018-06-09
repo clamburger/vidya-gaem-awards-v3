@@ -28,6 +28,10 @@ class ObsController extends Controller
 
     public function getSentimentAction(EntityManagerInterface $em)
     {
+        if ($this->container->has('profiler')) {
+            $this->container->get('profiler')->disable();
+        }
+
         // To determine the sentiment, we use a linear weighted rolling average of the past two minutes.
         $sentiment = $em->createQueryBuilder()
             ->select('AVG((TIMESTAMPDIFF(SECOND, :date, cm.date)) * cm.sentiment)')

@@ -119,6 +119,16 @@ obsOverlay:
     path:     /obs/overlay
     defaults: { _controller: AppBundle:Obs:overlay }
 
-sentimentAjax:
+obsGetSentiment:
     path:     /obs/sentiment
     defaults: { _controller: AppBundle:Obs:getSentiment }
+
+sentimentAnalysis:
+    path:     /sentiment-analysis
+    methods:  [GET]
+    defaults: { _controller: AppBundle:Sentiment:index }
+
+sentimentAnalysisPost:
+    path:     /sentiment-analysis
+    methods:  [POST]
+    defaults: { _controller: AppBundle:Sentiment:post }

@@ -44,7 +44,7 @@
     activeRappin = 0;
 
     function updateSentiment() {
-        $.get('{{ path('sentimentAjax') }}', function (data) {
+        $.get('{{ path('obsGetSentiment') }}', function (data) {
             var sentiment = $('#sentiment');
 
             sentiment.text(data.sentiment).removeClass('negative positive');

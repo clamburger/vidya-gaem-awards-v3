@@ -39,3 +39,6 @@ AppBundle\Entity\Config:
     navbarItems:
       type: json_array
       nullable: false
+    sentimentRules:
+      type: json_array
+      nullable: false

@@ -46,7 +46,10 @@ class Config
     private $timezone = self::DEFAULT_TIMEZONE;
 
     /** @var array */
-    private $navbarItems = ['home' => 'Home', 'config' => 'Config'];
+    private $navbarItems = ['config' => 'Config'];
+
+    /** @var array */
+    private $sentimentRules = [['exact' => [], 'contains' => [], 'regex' => []]];
 
     /**
      * @return \DateTime
@@ -314,6 +317,24 @@ class Config
     public function setAwardSuggestions(bool $awardSuggestions): Config
     {
         $this->awardSuggestions = $awardSuggestions;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSentimentRules(): array
+    {
+        return $this->sentimentRules;
+    }
+
+    /**
+     * @param array $sentimentRules
+     * @return Config
+     */
+    public function setSentimentRules(array $sentimentRules): Config
+    {
+        $this->sentimentRules = $sentimentRules;
         return $this;
     }
 }

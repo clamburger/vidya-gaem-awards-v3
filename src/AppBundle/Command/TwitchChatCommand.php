@@ -2,6 +2,7 @@
 namespace AppBundle\Command;
 
 use AppBundle\Entity\ChatMessage;
+use AppBundle\Service\SentimentAnalysisService;
 use Doctrine\ORM\EntityManagerInterface;
 use Irc\Bot;
 use Irc\Message;
@@ -14,13 +15,15 @@ class TwitchChatCommand extends ContainerAwareCommand
     const CHANNEL = '#vidyagaemawards';
 
     private $em;
+    private $sas;
 
     /** @var OutputInterface */
     private $output;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, SentimentAnalysisService $sas)
     {
         $this->em = $em;
+        $this->sas = $sas;
         parent::__construct();
     }
 
@@ -71,6 +74,7 @@ class TwitchChatCommand extends ContainerAwareCommand
         $this->output->writeln('    ' . $e->raw);
 
         if ($e->message->args[0] !== self::CHANNEL || $e->message->command !== Bot::CMD_PRIVMSG) {
+            dump('not sent');
             return;
         }
 
@@ -89,21 +93,9 @@ class TwitchChatCommand extends ContainerAwareCommand
             ->setDate(\DateTime::createFromFormat('U', $e->time))
             ->setUser($sender)
             ->setMessage($text)
-            ->setSentiment(self::analyseSentiment($text));
+            ->setSentiment($this->sas->getSentimentForText($text));
 
         $this->em->persist($chatMessage);
         $this->em->flush();
-    }
-
-    public function analyseSentiment(string $message)
-    {
-        $message = strtolower($message);
-        if ($message === '!shit') {
-            return -100;
-        } elseif ($message === '!hype') {
-            return 100;
-        }
-
-        return null;
     }
 }

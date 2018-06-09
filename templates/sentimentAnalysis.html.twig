@@ -1,0 +1,50 @@
+{% extends 'base/standard.html.twig' %}
+
+{% block content %}
+  <h1 class="page-header">Sentiment Analysis Rules</h1>
+
+  <div class="row">
+    <div class="col-xs-12">
+
+      <p>
+        Add a row for each entry. Each entry must have a vertical line after it, followed by a number between 100 (most positive) and -100 (most negative).
+      </p>
+
+      <form action="{{ path('sentimentAnalysisPost') }}" method="post">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="exact" class="control-label">Exact match</label>
+              <textarea class="form-control" id="exact" name="exact" rows="20">
+                {{- sentiment['exact'] -}}
+              </textarea>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="contains" class="control-label">Contains</label>
+              <textarea class="form-control" id="contains" name="contains" rows="20">
+                {{- sentiment['contains'] -}}
+              </textarea>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="regex" class="control-label">Regex</label>
+              <textarea class="form-control" id="regex" name="regex" rows="20">
+                {{- sentiment['regex'] -}}
+              </textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary" {{ config.isReadOnly ? 'disabled' : '' }}>Save config</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

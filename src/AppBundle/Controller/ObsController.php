@@ -30,13 +30,14 @@ class ObsController extends Controller
     {
         // To determine the sentiment, we use a linear weighted rolling average of the past two minutes.
         $sentiment = $em->createQueryBuilder()
-            ->select('AVG((120 - TIMESTAMPDIFF(SECOND, cm.date, CURRENT_TIMESTAMP()) * cm.sentiment))')
+            ->select('AVG((TIMESTAMPDIFF(SECOND, :date, cm.date)) * cm.sentiment)')
             ->from(ChatMessage::class, 'cm')
             ->where('cm.date >= :date')
-            ->setParameter('date', '-120 seconds')
+            ->setParameter('date', new \DateTime('-120 seconds'))
             ->getQuery()
             ->getSingleScalarResult();
 
+        $sentiment /= 120;
         return $this->json([
             'sentiment' => (int)$sentiment,
         ]);

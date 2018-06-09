@@ -16,7 +16,7 @@ class Config
 //        'promo' => 'Special promo page',
     ];
 
-    const DEFAULT_TIMEZONE = 'America/New_York';
+    const DEFAULT_TIMEZONE = 'UTC';
 
     /** @var string */
     private $id = 1;

@@ -14,19 +14,4 @@ class StaticController extends Controller
 
         return $this->forward($defaultRoute->getDefault('_controller'), $defaultRoute->getDefaults());
     }
-
-    public function videosAction()
-    {
-        return $this->render('videos.html.twig');
-    }
-
-    public function soundtrackAction()
-    {
-        return $this->render('soundtrack.html.twig');
-    }
-
-    public function creditsAction()
-    {
-        return $this->render('credits.html.twig');
-    }
 }

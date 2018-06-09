@@ -1,7 +1,6 @@
 <?php
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Advertisement;
 use AppBundle\Service\ConfigService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -37,14 +36,7 @@ class LauncherController extends Controller
         );
 
         // Fake ads
-        $adverts = $em->getRepository(Advertisement::class)->findBy(['special' => 0]);
-
-        if (empty($adverts)) {
-            $ad1 = $ad2 = false;
-        } else {
-            $ad1 = $adverts[array_rand($adverts)];
-            $ad2 = $adverts[array_rand($adverts)];
-        }
+        $ad1 = $ad2 = false;
 
         return $this->render('countdown.html.twig', [
             'streamDate' => $streamDate,

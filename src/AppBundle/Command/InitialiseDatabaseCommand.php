@@ -1,7 +1,6 @@
 <?php
 namespace AppBundle\Command;
 
-use AppBundle\Entity\Autocompleter;
 use AppBundle\Entity\Config;
 use AppBundle\Entity\Permission;
 use AppBundle\Entity\User;
@@ -47,12 +46,6 @@ class InitialiseDatabaseCommand extends ContainerAwareCommand
         // Add the default config
         $config = new Config();
         $this->em->persist($config);
-
-        // Add the special-case autocompleter
-        $autocompleter = new Autocompleter();
-        $autocompleter->setId('video-game');
-        $autocompleter->setName('Video games in ' . date('Y'));
-        $this->em->persist($autocompleter);
 
         // Add the standard permissions
         foreach (Permission::STANDARD_PERMISSIONS as $id => $description) {

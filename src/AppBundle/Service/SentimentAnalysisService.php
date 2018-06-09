@@ -1,15 +1,18 @@
 <?php
 namespace AppBundle\Service;
 
+use AppBundle\Entity\ChatMessage;
 use Doctrine\ORM\EntityManagerInterface;
 
 class SentimentAnalysisService
 {
     private $config;
+    private $em;
 
-    public function __construct(ConfigService $config)
+    public function __construct(ConfigService $config, EntityManagerInterface $em)
     {
         $this->config = $config;
+        $this->em = $em;
     }
 
     public function getSentimentForText(string $text)
@@ -35,5 +38,20 @@ class SentimentAnalysisService
         }
 
         return null;
+    }
+
+    public function getCurrentSentiment(): int
+    {
+        // To determine the sentiment, we use a linear weighted rolling average of the past two minutes.
+        $sentiment = $this->em->createQueryBuilder()
+            ->select('AVG((TIMESTAMPDIFF(SECOND, :date, cm.date)) * cm.sentiment)')
+            ->from(ChatMessage::class, 'cm')
+            ->where('cm.date >= :date')
+            ->setParameter('date', new \DateTime('-120 seconds'))
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $sentiment /= 120;
+        return (int)$sentiment;
     }
 }

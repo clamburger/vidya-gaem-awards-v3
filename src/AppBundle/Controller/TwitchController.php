@@ -2,7 +2,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Action;
+use AppBundle\Entity\ChatMessage;
 use AppBundle\Service\AuditService;
+use AppBundle\Service\SentimentAnalysisService;
 use Doctrine\ORM\EntityManagerInterface;
 use fXmlRpc\Client;
 use fXmlRpc\Exception\FaultException;
@@ -38,15 +40,27 @@ class TwitchController extends Controller
         return new Supervisor($connector);
     }
 
-    public function indexAction(EntityManagerInterface $em)
+    public function indexAction(EntityManagerInterface $em, SentimentAnalysisService $sentimentService)
     {
         $supervisorInfo = $this->getSupervisor()->getProcessInfo(self::SUPERVISOR_PROCESS_NAME);
         $running = $supervisorInfo['statename'] === 'RUNNING';
+
+        $messages = $em->createQueryBuilder()
+            ->select('cm')
+            ->from(ChatMessage::class, 'cm')
+            ->where('cm.date >= :date')
+            ->setParameter('date', new \DateTime('-1 hour'))
+            ->setMaxResults(20)
+            ->orderBy('cm.date', 'DESC')
+            ->getQuery()
+            ->getResult();
 
         return $this->render('twitchChat.html.twig', [
             'title' => 'Twitch Chat',
             'supervisorInfo' => $supervisorInfo,
             'running' => $running,
+            'messages' => $messages,
+            'currentSentiment' => $sentimentService->getCurrentSentiment()
         ]);
     }
 

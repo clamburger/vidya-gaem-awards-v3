@@ -3,6 +3,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\ChatMessage;
 use AppBundle\Service\ConfigService;
+use AppBundle\Service\SentimentAnalysisService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\RouterInterface;
@@ -26,24 +27,14 @@ class ObsController extends Controller
         return $this->render('obsOverlay.html.twig');
     }
 
-    public function getSentimentAction(EntityManagerInterface $em)
+    public function getSentimentAction(SentimentAnalysisService $sentimentService)
     {
         if ($this->container->has('profiler')) {
             $this->container->get('profiler')->disable();
         }
 
-        // To determine the sentiment, we use a linear weighted rolling average of the past two minutes.
-        $sentiment = $em->createQueryBuilder()
-            ->select('AVG((TIMESTAMPDIFF(SECOND, :date, cm.date)) * cm.sentiment)')
-            ->from(ChatMessage::class, 'cm')
-            ->where('cm.date >= :date')
-            ->setParameter('date', new \DateTime('-120 seconds'))
-            ->getQuery()
-            ->getSingleScalarResult();
-
-        $sentiment /= 120;
         return $this->json([
-            'sentiment' => (int)$sentiment,
+            'sentiment' => $sentimentService->getCurrentSentiment(),
         ]);
     }
 }

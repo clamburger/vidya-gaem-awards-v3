@@ -132,3 +132,7 @@ sentimentAnalysisPost:
     path:     /sentiment-analysis
     methods:  [POST]
     defaults: { _controller: AppBundle:Sentiment:post }
+
+twitchChat:
+    path:     /twitch-chat
+    defaults: { _controller: AppBundle:Twitch:index }

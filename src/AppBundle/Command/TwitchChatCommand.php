@@ -74,7 +74,6 @@ class TwitchChatCommand extends ContainerAwareCommand
         $this->output->writeln('    ' . $e->raw);
 
         if ($e->message->args[0] !== self::CHANNEL || $e->message->command !== Bot::CMD_PRIVMSG) {
-            dump('not sent');
             return;
         }
 

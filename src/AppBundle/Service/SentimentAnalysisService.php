@@ -44,14 +44,13 @@ class SentimentAnalysisService
     {
         // To determine the sentiment, we use a linear weighted rolling average of the past two minutes.
         $sentiment = $this->em->createQueryBuilder()
-            ->select('AVG( LEAST( TIMESTAMPDIFF(SECOND, :date, cm.date) + 10, 120 )  * cm.sentiment)')
+            ->select('AVG( TIMESTAMPDIFF(SECOND, :date, cm.date) ) * cm.sentiment) / SUM( TIMESTAMPDIFF(SECOND, :date, cm.date) )')
             ->from(ChatMessage::class, 'cm')
             ->where('cm.date >= :date')
             ->setParameter('date', new \DateTime('-120 seconds'))
             ->getQuery()
             ->getSingleScalarResult();
 
-        $sentiment = $sentiment / 120;
         return (int)$sentiment;
     }
 }

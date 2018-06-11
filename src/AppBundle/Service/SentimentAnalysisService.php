@@ -48,6 +48,7 @@ class SentimentAnalysisService
             ->from(ChatMessage::class, 'cm')
             ->where('cm.date >= :date')
             ->setParameter('date', new \DateTime('-120 seconds'))
+            ->andWhere('cm.sentiment IS NOT NULL')
             ->getQuery()
             ->getSingleScalarResult();
 

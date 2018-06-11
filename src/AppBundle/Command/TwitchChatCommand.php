@@ -92,7 +92,8 @@ class TwitchChatCommand extends ContainerAwareCommand
             ->setDate(\DateTime::createFromFormat('U', $e->time))
             ->setUser($sender)
             ->setMessage($text)
-            ->setSentiment($this->sas->getSentimentForText($text));
+            ->setSentiment($this->sas->getSentimentForText($text))
+            ->setSource('Twitch');
 
         $this->em->persist($chatMessage);
         $this->em->flush();

@@ -1,0 +1,73 @@
+{% extends 'base/master.html.twig' %}
+
+{% block fullTitle '/v/3 OBS Overlay' %}
+
+{% block head %}
+  <style type="text/css">
+    .middle {
+      top: 50%;
+      transform: translate(-50%,-50%);
+      left: 50%;
+      position: absolute;
+      width: 200px;
+    }
+
+    .rappin {
+      display: none;
+    }
+
+    .rappin.show {
+      display: block;
+    }
+
+    #sentiment {
+      text-align: center;
+      font-size: 30px;
+      color: white;
+      -webkit-text-stroke: 1px black;
+      text-shadow: 2px 2px black;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    #sentiment.positive {
+      color: #B2FF59;
+    }
+
+    #sentiment.negative {
+      color: #ff5252;
+    }
+
+    .middle button {
+      width: 100%;
+    }
+  </style>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+        $('#popout').click(function () {
+            window.open('{{ path('votingPopout') }}?popout=true', '/v/3', 'height=180,width=220');
+        });
+    });
+  </script>
+{% endblock %}
+
+{% block body %}
+  <div class="middle">
+    {% if popout %}
+    <p>
+      <button class="btn btn-success btn-lg">Maximum hype</button>
+    </p>
+    <p>
+      <button class="btn btn-warning btn-lg">Mite b cool</button>
+    </p>
+    <p>
+      <button class="btn btn-danger btn-lg">It's shit</button>
+    </p>
+    {% else %}
+    <p>
+      <button class="btn btn-default btn-lg" id="popout">Open voting popout</button>
+    </p>
+    {% endif %}
+  </div>
+{% endblock %}

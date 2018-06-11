@@ -27,7 +27,7 @@ class SentimentAnalysisService
             }
         }
         foreach ($rules['contains'] as $rule) {
-            if (preg_match('/\b' . $rule[0] . '\b/', $text)) {
+            if (preg_match('{\b' . preg_quote($rule[0]) . '\b}', $text)) {
                 return $rule[1];
             }
         }

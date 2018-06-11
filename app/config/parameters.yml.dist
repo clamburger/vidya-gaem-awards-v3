@@ -23,3 +23,7 @@ parameters:
 
     supervisor_user: ~
     supervisor_password: ~
+
+    google_client_id: ~
+    google_client_secret: ~
+    google_refresh_token: ~

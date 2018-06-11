@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Action;
 use AppBundle\Entity\ChatMessage;
 use AppBundle\Service\AuditService;
+use AppBundle\Service\ConfigService;
 use AppBundle\Service\SentimentAnalysisService;
 use Doctrine\ORM\EntityManagerInterface;
 use fXmlRpc\Client;
@@ -18,9 +19,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-class TwitchController extends Controller
+class ChatMonitoringPanelController extends Controller
 {
-    const SUPERVISOR_PROCESS_NAME = 'vga-twitch-monitor';
+    const SUPERVISOR_PROCESS_NAME_TWITCH = 'vga-twitch-monitor';
+    const SUPERVISOR_PROCESS_NAME_YOUTUBE = 'vga-youtube-monitor';
 
     private function getSupervisor()
     {
@@ -40,10 +42,15 @@ class TwitchController extends Controller
         return new Supervisor($connector);
     }
 
-    public function indexAction(EntityManagerInterface $em, SentimentAnalysisService $sentimentService)
+    public function indexAction(EntityManagerInterface $em, ConfigService $configService)
     {
-        $supervisorInfo = $this->getSupervisor()->getProcessInfo(self::SUPERVISOR_PROCESS_NAME);
-        $running = $supervisorInfo['statename'] === 'RUNNING';
+        $twitch = $youtube = [];
+
+        $twitch['supervisor'] = $this->getSupervisor()->getProcessInfo(self::SUPERVISOR_PROCESS_NAME_TWITCH);
+        $twitch['running'] = $twitch['supervisor']['statename'] === 'RUNNING';
+
+        $youtube['supervisor'] = $this->getSupervisor()->getProcessInfo(self::SUPERVISOR_PROCESS_NAME_YOUTUBE);
+        $youtube['running'] = $youtube['supervisor']['statename'] === 'RUNNING';
 
         $messages = $em->createQueryBuilder()
             ->select('cm')
@@ -55,16 +62,16 @@ class TwitchController extends Controller
             ->getQuery()
             ->getResult();
 
-        return $this->render('twitchChat.html.twig', [
-            'title' => 'Twitch Chat',
-            'supervisorInfo' => $supervisorInfo,
-            'running' => $running,
-            'messages' => $messages,
-            'currentSentiment' => $sentimentService->getCurrentSentiment()
+        return $this->render('chatMonitoringPanel.html.twig', [
+            'title' => 'Chat Monitoring Panel',
+            'twitch' => $twitch,
+            'youtube' => $youtube,
+            'youtubeVideoId' => $configService->getConfig()->getYoutubeStreamId(),
+            'messages' => $messages
         ]);
     }
 
-    public function updateSupervisorStateAction(Request $request, SessionInterface $session, AuditService $auditService)
+    public function updateSupervisorStateAction(Request $request, SessionInterface $session, AuditService $auditService, ConfigService $configService, EntityManagerInterface $em)
     {
         $post = $request->request;
 
@@ -72,9 +79,21 @@ class TwitchController extends Controller
 
         /** @var Session $session */
 
+        $processName = 'vga-' . $post->get('service') . '-monitor';
+
+        if ($post->get('youtubeId')) {
+            $currentState = $supervisor->getProcessInfo('vga-youtube-monitor')['statename'];
+            if ($currentState !== 'RUNNING') {
+                $config = $configService->getConfig();
+                $config->setYoutubeStreamId($post->get('youtubeId'));
+                $em->persist($config);
+                $em->flush();
+            }
+        }
+
         if ($post->get('action') === 'start') {
             try {
-                $supervisor->startProcess('vga-twitch-monitor', true);
+                $supervisor->startProcess($processName, true);
                 $session->getFlashBag()->add('success', 'Start command sent.');
                 $auditService->add(new Action('supervisor-started'));
             } catch (FaultException $e) {
@@ -82,7 +101,7 @@ class TwitchController extends Controller
             }
         } elseif ($post->get('action') === 'stop') {
             try {
-                $supervisor->stopProcess('vga-twitch-monitor', true);
+                $supervisor->stopProcess($processName, true);
                 $session->getFlashBag()->add('success', 'Stop command sent.');
                 $auditService->add(new Action('supervisor-stopped'));
             } catch (FaultException $e) {
@@ -92,6 +111,6 @@ class TwitchController extends Controller
             $session->getFlashBag()->add('error', 'Invalid command.');
         }
 
-        return $this->redirectToRoute('twitchChat');
+        return $this->redirectToRoute('chatMonitoringPanel');
     }
 }

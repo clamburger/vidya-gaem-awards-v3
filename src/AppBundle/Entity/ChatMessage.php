@@ -29,6 +29,9 @@ class ChatMessage
      */
     private $sentiment;
 
+    /** @var string */
+    private $source;
+
 
     public function getId(): int
     {
@@ -77,5 +80,16 @@ class ChatMessage
     public function getSentiment(): ?int
     {
         return $this->sentiment;
+    }
+
+    public function setSource(string $source): ChatMessage
+    {
+        $this->source = $source;
+        return $this;
+    }
+
+    public function getSource(): string
+    {
+        return $this->source;
     }
 }

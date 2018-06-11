@@ -19,3 +19,7 @@ AppBundle\Entity\ChatMessage:
     sentiment:
       type: integer
       nullable: true
+    source:
+      type: string
+      length: 10
+      nullable: false

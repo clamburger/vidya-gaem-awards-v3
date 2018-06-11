@@ -1,0 +1,100 @@
+{% extends 'base/standard.html.twig' %}
+
+{% block head %}
+  <style type="text/css">
+    #chat_embed {
+      border: 1px solid silver;
+      padding-right: 1px;
+    }
+    .status-block {
+      background-color: #F1EDEE;
+      border: 1px solid silver;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .status-block .label {
+      display: block;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <h1 class="page-header">Chat Monitor</h1>
+  <div class="row">
+    <div class="col-md-4">
+      <h2>Monitoring processes</h2>
+      <div class="status-block">
+        <strong><code>{{ twitch.supervisor.name }}</code></strong><br>
+        <code>{{ twitch.supervisor.description }}</code>
+        <div class="h4">
+          <div class="label label-{{ twitch.running ? 'success' : 'danger' }}">{{ twitch.supervisor.statename }}</div>
+        </div>
+        <form action="{{ path('updateSupervisorState') }}" method="POST">
+          <input type="hidden" name="service" value="twitch">
+          <input type="hidden" name="action" value="{{ twitch.running ? 'stop' : 'start' }}">
+          <button class="btn btn-default btn-sm" type="submit">{{ twitch.running ? 'Stop process' : 'Start process' }}</button>
+        </form>
+      </div>
+      <p>
+        The Twitch monitor should just work&trade; most of the time. If it's not working, restarting it should do the trick.
+      </p>
+      <div class="status-block">
+        <strong><code>{{ youtube.supervisor.name }}</code></strong><br>
+        <code>{{ youtube.supervisor.description }}</code>
+        <div class="h4">
+          <div class="label label-{{ youtube.running ? 'success' : 'danger' }}">{{ youtube.supervisor.statename }}</div>
+        </div>
+        <form action="{{ path('updateSupervisorState') }}" method="POST">
+          <input type="hidden" name="service" value="youtube">
+          <input type="hidden" name="action" value="{{ youtube.running ? 'stop' : 'start' }}">
+
+          <div class="form-group">
+            <label for="youtubeId" class="control-label">YouTube Video ID</label>
+            <input type="text" class="form-control" id="youtubeId" name="youtubeId" {{ youtube.running ? 'disabled' : 'required' }} value="{{ youtubeVideoId }}">
+          </div>
+          <button class="btn btn-default btn-sm" type="submit">{{ youtube.running ? 'Stop process' : 'Start process' }}</button>
+        </form>
+      </div>
+      {% if youtube.supervisor.statename in ['FATAL', 'BACKOFF'] %}
+      <p>
+        The YouTube monitor process was unable to start. Check that the video ID is correct and try again (it must point to an active livestream).
+      </p>
+      {% else %}
+      <p>
+        The YouTube video ID must point to an active livestream, or no chat messages will be read. To update the ID, first stop the process.
+      </p>
+      {% endif %}
+
+      <h2>Links</h2>
+      <p>
+        <a class="btn btn-default" href="{{ path('sentimentAnalysis') }}">Edit sentiment analysis rules</a>
+      </p>
+      <p>
+        <a class="btn btn-default" href="{{ path('obsOverlay') }}" target="_blank">OBS overlay</a><br>
+      </p>
+    </div>
+    <div class="col-md-8">
+      <h2>Last 20 messages</h2>
+      <p>
+        Only messages from the last hour are shown. Sentiment is calculated as soon as the message is received
+        and won't retroactively change if the rules are updated.
+      </p>
+      <table class="table table-condensed table-bordered" style="background: white;">
+          <tr>
+            <th style="width: 80px;">Time</th>
+            <th style="width: 80px;">Source</th>
+            <th>Message</th>
+            <th style="width: 80px;">Sentiment</th>
+          </tr>
+        {% for message in messages %}
+          <tr>
+            <td>{{ message.date.format('H:i:s') }}</td>
+            <td>{{ message.source }}</td>
+            <td style="font-size: 80%;">{{ message.message }}</td>
+            <td>{{ message.sentiment }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+{% endblock %}

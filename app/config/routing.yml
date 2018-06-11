@@ -123,6 +123,10 @@ obsGetSentiment:
     path:     /obs/sentiment
     defaults: { _controller: AppBundle:Obs:getSentiment }
 
+votingPopout:
+    path:     /vote
+    defaults: { _controller: AppBundle:Sentiment:vote }
+
 sentimentAnalysis:
     path:     /sentiment-analysis
     methods:  [GET]
@@ -133,11 +137,11 @@ sentimentAnalysisPost:
     methods:  [POST]
     defaults: { _controller: AppBundle:Sentiment:post }
 
-twitchChat:
+chatMonitoringPanel:
     path:     /twitch-chat
-    defaults: { _controller: AppBundle:Twitch:index }
+    defaults: { _controller: AppBundle:ChatMonitoringPanel:index }
 
 updateSupervisorState:
     path:     /twitch-chat/supervisor
     methods:  [POST]
-    defaults: { _controller: AppBundle:Twitch:updateSupervisorState }
+    defaults: { _controller: AppBundle:ChatMonitoringPanel:updateSupervisorState }

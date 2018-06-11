@@ -107,4 +107,11 @@ class SentimentController extends Controller
 
         return $rules;
     }
+
+    public function voteAction(Request $request)
+    {
+        return $this->render('votingPopout.html.twig', [
+            'popout' => $request->query->get('popout', false)
+        ]);
+    }
 }

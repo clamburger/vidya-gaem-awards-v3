@@ -51,6 +51,9 @@ class Config
     /** @var array */
     private $sentimentRules = [['exact' => [], 'contains' => [], 'regex' => []]];
 
+    /** @var string */
+    private $youtubeStreamId;
+
     /**
      * @return \DateTime
      */
@@ -335,6 +338,17 @@ class Config
     public function setSentimentRules(array $sentimentRules): Config
     {
         $this->sentimentRules = $sentimentRules;
+        return $this;
+    }
+
+    public function getYoutubeStreamId(): ?string
+    {
+        return $this->youtubeStreamId;
+    }
+
+    public function setYoutubeStreamId(?string $youtubeStreamId): Config
+    {
+        $this->youtubeStreamId = $youtubeStreamId;
         return $this;
     }
 }

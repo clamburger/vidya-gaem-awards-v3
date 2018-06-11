@@ -42,3 +42,7 @@ AppBundle\Entity\Config:
     sentimentRules:
       type: json_array
       nullable: false
+    youtubeStreamId:
+      type: string
+      length: 20
+      nullable: true

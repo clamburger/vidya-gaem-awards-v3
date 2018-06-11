@@ -54,4 +54,21 @@ class SentimentAnalysisService
 
         return (int)$sentiment;
     }
+
+    /**
+     * @return int Returns an int representing the current intensity of chat.
+     */
+    public function getCurrentIntensity(): int
+    {
+        $intensity = (int)$this->em->createQueryBuilder()
+            ->select('SUM( TIMESTAMPDIFF(SECOND, :date, cm.date) )')
+            ->from(ChatMessage::class, 'cm')
+            ->where('cm.date >= :date')
+            ->setParameter('date', new \DateTime('-120 seconds'))
+            ->andWhere('cm.sentiment IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return (int)(round($intensity / 120));
+    }
 }

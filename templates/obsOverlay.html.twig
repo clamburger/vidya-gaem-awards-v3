@@ -27,6 +27,8 @@
       text-shadow: 2px 2px black;
       font-weight: bold;
       margin-top: 5px;
+      height: 60px;
+      transform-origin: top center;
     }
 
     #sentiment.positive {
@@ -64,6 +66,8 @@
             } else {
                 $('#rappin0').addClass('show');
             }
+            
+            sentiment.css('transform', 'scale(' + Math.min(1 + data.intensity * 0.05, 2) + ')');
         });
     }
     updateSentiment();

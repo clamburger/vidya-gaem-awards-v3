@@ -35,6 +35,7 @@ class ObsController extends Controller
 
         return $this->json([
             'sentiment' => $sentimentService->getCurrentSentiment(),
+            'intensity' => $sentimentService->getCurrentIntensity(),
         ]);
     }
 }

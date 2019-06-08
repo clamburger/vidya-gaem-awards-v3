@@ -119,6 +119,10 @@ obsOverlay:
     path:     /obs/overlay
     defaults: { _controller: AppBundle:Obs:overlay }
 
+obsOverlayTest:
+    path:     /obs/overlay/test
+    defaults: { _controller: AppBundle:Obs:overlayFull }
+
 obsGetSentiment:
     path:     /obs/sentiment
     defaults: { _controller: AppBundle:Obs:getSentiment }
@@ -136,6 +140,10 @@ sentimentAnalysisPost:
     path:     /sentiment-analysis
     methods:  [POST]
     defaults: { _controller: AppBundle:Sentiment:post }
+
+apiSentimentRules:
+    path:     /api/sentiment-rules
+    defaults: { _controller: AppBundle:Sentiment:apiRules }
 
 chatMonitoringPanel:
     path:     /twitch-chat

@@ -1,0 +1,89 @@
+{% extends 'base/master.html.twig' %}
+
+{% block fullTitle '/v/3 OBS Overlay' %}
+
+{% block head %}
+  <style type="text/css">
+    .middle {
+      top: 50%;
+      transform: translate(-50%,-50%);
+      left: 50%;
+      position: absolute;
+    }
+
+    .rappin {
+      display: none;
+    }
+
+    .rappin.show {
+      display: block;
+    }
+
+    #sentiment {
+      text-align: center;
+      font-size: 30px;
+      color: white;
+      -webkit-text-stroke: 1px black;
+      text-shadow: 2px 2px black;
+      font-weight: bold;
+      margin-top: 5px;
+      height: 60px;
+      transform-origin: top center;
+    }
+
+    #sentiment.positive {
+      color: #B2FF59;
+    }
+
+    #sentiment.negative {
+      color: #ff5252;
+    }
+  </style>
+
+  <script src="https://vidyagaemawards.com/v3/node/socket.io/socket.io.js"></script>
+
+  <script>
+    $(function () {
+      var $sentiment = $('#sentiment');
+      var socket = io.connect('https://vidyagaemawards.com', {path: '/v3/node/socket.io'});
+      socket.on('sentiment', function (msg) {
+        var sentiment = msg.sentiment;
+
+        $sentiment.text(Math.round(sentiment)).removeClass('negative positive');
+        if (sentiment < 0) {
+          $sentiment.addClass('negative');
+        } else if (sentiment > 0) {
+          $sentiment.addClass('positive');
+        }
+
+        $('.rappin').removeClass('show');
+        if (sentiment > 50) {
+          $('#rappin4').addClass('show');
+        } else if (sentiment > 0) {
+          $('#rappin3').addClass('show');
+        } else if (sentiment < -50) {
+          $('#rappin1').addClass('show');
+        } else if (sentiment < 0) {
+          $('#rappin2').addClass('show');
+        } else {
+          $('#rappin0').addClass('show');
+        }
+
+        $sentiment.css('transform', 'scale(' + Math.min(1 + msg.count * 0.05, 2) + ')');
+      });
+    });
+  </script>
+{% endblock %}
+
+{% block body %}
+  <div class="middle">
+    <img src="{{ asset('img/u-rappin-0.png') }}" id="rappin0" class="rappin show">
+    <img src="{{ asset('img/u-rappin-1.png') }}" id="rappin1" class="rappin">
+    <img src="{{ asset('img/u-rappin-2.png') }}" id="rappin2" class="rappin">
+    <img src="{{ asset('img/u-rappin-3.png') }}" id="rappin3" class="rappin">
+    <img src="{{ asset('img/u-rappin-4.png') }}" id="rappin4" class="rappin">
+    <div id="sentiment">
+      0
+    </div>
+  </div>
+{% endblock %}

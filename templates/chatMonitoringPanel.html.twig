@@ -31,29 +31,29 @@
             <div class="label label-{{ node.running ? 'success' : 'danger' }}">{{ node.supervisor.statename }}</div>
           </div>
           <form action="{{ path('updateSupervisorState') }}" method="POST">
-            <input type="hidden" name="service" value="twitch">
+            <input type="hidden" name="service" value="node">
             <input type="hidden" name="action" value="{{ node.running ? 'stop' : 'start' }}">
             <button class="btn btn-default btn-sm" type="submit">{{ node.running ? 'Stop process' : 'Start process' }}</button>
           </form>
         </div>
         <p>
-          This is the new NodeJS-based monitor.
+          This is the new NodeJS-based monitor. It currently monitors Twitch.
         </p>
-        <div class="status-block">
-          <strong><code>{{ twitch.supervisor.name }}</code></strong><br>
-          <code>{{ twitch.supervisor.description }}</code>
-          <div class="h4">
-            <div class="label label-{{ twitch.running ? 'success' : 'danger' }}">{{ twitch.supervisor.statename }}</div>
-          </div>
-          <form action="{{ path('updateSupervisorState') }}" method="POST">
-            <input type="hidden" name="service" value="twitch">
-            <input type="hidden" name="action" value="{{ twitch.running ? 'stop' : 'start' }}">
-            <button class="btn btn-default btn-sm" type="submit">{{ twitch.running ? 'Stop process' : 'Start process' }}</button>
-          </form>
-        </div>
-        <p>
-          The Twitch monitor should just work&trade; most of the time. If it's not working, restarting it should do the trick.
-        </p>
+{#        <div class="status-block">#}
+{#          <strong><code>{{ twitch.supervisor.name }}</code></strong><br>#}
+{#          <code>{{ twitch.supervisor.description }}</code>#}
+{#          <div class="h4">#}
+{#            <div class="label label-{{ twitch.running ? 'success' : 'danger' }}">{{ twitch.supervisor.statename }}</div>#}
+{#          </div>#}
+{#          <form action="{{ path('updateSupervisorState') }}" method="POST">#}
+{#            <input type="hidden" name="service" value="twitch">#}
+{#            <input type="hidden" name="action" value="{{ twitch.running ? 'stop' : 'start' }}">#}
+{#            <button class="btn btn-default btn-sm" type="submit">{{ twitch.running ? 'Stop process' : 'Start process' }}</button>#}
+{#          </form>#}
+{#        </div>#}
+{#        <p>#}
+{#          The Twitch monitor should just work&trade; most of the time. If it's not working, restarting it should do the trick.#}
+{#        </p>#}
         <div class="status-block">
           <strong><code>{{ youtube.supervisor.name }}</code></strong><br>
           <code>{{ youtube.supervisor.description }}</code>

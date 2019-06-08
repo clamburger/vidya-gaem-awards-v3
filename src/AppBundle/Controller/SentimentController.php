@@ -5,7 +5,9 @@ use AppBundle\Entity\Config;
 use AppBundle\Service\AuditService;
 use AppBundle\Service\ConfigService;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Action;
 use AppBundle\Entity\TableHistory;
@@ -75,6 +77,9 @@ class SentimentController extends Controller
             new TableHistory(Config::class, 1, $post->all())
         );
 
+        $client = new Client();
+        $client->post('https://vidyagaemawards.com/v3/node/api/update-rules');
+
         return $this->redirectToRoute('sentimentAnalysis');
     }
 
@@ -113,5 +118,13 @@ class SentimentController extends Controller
         return $this->render('votingPopout.html.twig', [
             'popout' => $request->query->get('popout', false)
         ]);
+    }
+
+    public function apiRulesAction(ConfigService $config)
+    {
+        $rules = $config->getConfig()->getSentimentRules();
+        return new JsonResponse(
+            ['rules' => $rules]
+        );
     }
 }

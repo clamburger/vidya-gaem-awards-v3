@@ -6,7 +6,10 @@ use AppBundle\Service\ConfigService;
 use AppBundle\Service\SentimentAnalysisService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Twig\Error\LoaderError;
 
 class ObsController extends Controller
 {
@@ -18,13 +21,22 @@ class ObsController extends Controller
         return $this->forward($defaultRoute->getDefault('_controller'), $defaultRoute->getDefaults());
     }
 
-    public function overlayAction()
-    {
+    public function overlayAction(Request $request) {
         if ($this->container->has('profiler')) {
             $this->container->get('profiler')->disable();
         }
 
-        return $this->render('obsOverlay.html.twig');
+        $overlay = $request->query->get('overlay');
+
+        try {
+            return $this->render('overlays/' . $overlay . '.html.twig');
+        } catch (\InvalidArgumentException $e) {
+            return new Response('Invalid overlay selected');
+        }
+    }
+
+    public function overlayFullAction() {
+        return $this->render('obsOverlayFull.html.twig');
     }
 
     public function getSentimentAction(SentimentAnalysisService $sentimentService)

@@ -1,0 +1,28 @@
+{% extends 'base/master.html.twig' %}
+
+{% block title %}OBS Test{% endblock %}
+
+{% block head %}
+  <style>
+    html {
+      height: 100%;
+    }
+    body {
+      padding: 0;
+      background: #2B2B2B;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+    .sf-toolbar {
+      display: none !important;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <div style="width: 1920px; height: 1080px; background: #EEF1FE;">
+    <img src="{{ asset('img/Overlay-1.png') }}">
+  </div>
+{% endblock %}

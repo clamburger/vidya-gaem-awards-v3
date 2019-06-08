@@ -63,7 +63,7 @@ class ChatMonitoringPanelController extends Controller
             $youtube['supervisor'] = $supervisor->getProcessInfo(self::SUPERVISOR_PROCESS_NAME_YOUTUBE);
             $youtube['running'] = $youtube['supervisor']['statename'] === 'RUNNING';
 
-            $node['supervisor'] = $supervisor->getProcessInfo(self::SUPERVISOR_PROCESS_NAME_TWITCH);
+            $node['supervisor'] = $supervisor->getProcessInfo(self::SUPERVISOR_PROCESS_NAME_NODE);
             $node['running'] = $node['supervisor']['statename'] === 'RUNNING';
         }
 

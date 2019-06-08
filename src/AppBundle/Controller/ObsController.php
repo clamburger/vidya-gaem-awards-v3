@@ -46,7 +46,7 @@ class ObsController extends Controller
         }
 
         return $this->render('obsOverlayFull.html.twig', [
-            'overlay' => $overlay
+            'getParams' => $request->query->all()
         ]);
     }
 

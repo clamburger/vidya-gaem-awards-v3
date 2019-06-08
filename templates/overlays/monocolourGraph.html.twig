@@ -55,7 +55,7 @@
 
       // Add to SmoothieChart
       smoothie.addTimeSeries(line1, {
-        strokeStyle: 'rgb(0, 0, 0)',
+        strokeStyle: '{{ app.request.query.get('color') ?: '#000000' }}',
         lineWidth: 2,
       });
     });
@@ -64,6 +64,6 @@
 
 {% block body %}
   <div class="middle">
-    <canvas id="chart" width="192" height="183"></canvas>
+    <canvas id="chart" width="{{ app.request.query.get('width') ?: 192 }}" height="{{ app.request.query.get('height') ?: 183 }}"></canvas>
   </div>
 {% endblock %}

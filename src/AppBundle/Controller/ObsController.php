@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Twig\Environment;
 use Twig\Error\LoaderError;
 
 class ObsController extends Controller
@@ -21,22 +22,28 @@ class ObsController extends Controller
         return $this->forward($defaultRoute->getDefault('_controller'), $defaultRoute->getDefaults());
     }
 
-    public function overlayAction(Request $request) {
+    public function overlayAction(Environment $twig, Request $request) {
         if ($this->container->has('profiler')) {
             $this->container->get('profiler')->disable();
         }
 
         $overlay = $request->query->get('overlay');
-
-        try {
-            return $this->render('overlays/' . $overlay . '.html.twig');
-        } catch (\InvalidArgumentException $e) {
+        if (!$twig->getLoader()->exists('overlays/' . $overlay . '.html.twig')) {
             return new Response('Invalid overlay selected');
         }
+
+        return $this->render('overlays/' . $overlay . '.html.twig');
     }
 
-    public function overlayFullAction() {
-        return $this->render('obsOverlayFull.html.twig');
+    public function overlayFullAction(Environment $twig, Request $request) {
+        $overlay = $request->query->get('overlay');
+        if (!$twig->getLoader()->exists('overlays/' . $overlay . '.html.twig')) {
+            return new Response('Invalid overlay selected');
+        }
+
+        return $this->render('obsOverlayFull.html.twig', [
+            'overlay' => $overlay
+        ]);
     }
 
     public function getSentimentAction(SentimentAnalysisService $sentimentService)

@@ -18,11 +18,22 @@
     .sf-toolbar {
       display: none !important;
     }
+
+    iframe {
+      border: 5px solid transparent;
+      position: absolute;
+      width: 202px;
+      overflow: hidden;
+      bottom: 103px;
+      left: -5px;
+      height: 183px;
+    }
   </style>
 {% endblock %}
 
 {% block body %}
-  <div style="width: 1920px; height: 1080px; background: #EEF1FE;">
+  <div style="width: 1920px; height: 1080px; background: #EEF1FE; position: relative;">
     <img src="{{ asset('img/Overlay-1.png') }}">
+    <iframe src="{{ path('obsOverlay', {overlay: overlay}) }}" scrolling="no"></iframe>
   </div>
 {% endblock %}

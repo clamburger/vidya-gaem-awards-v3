@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -22,28 +24,40 @@ class ObsController extends Controller
         return $this->forward($defaultRoute->getDefault('_controller'), $defaultRoute->getDefaults());
     }
 
-    public function overlayAction(Environment $twig, Request $request) {
+    public function overlayAction(Environment $twig, Request $request, KernelInterface $kernel) {
         if ($this->container->has('profiler')) {
             $this->container->get('profiler')->disable();
         }
 
         $overlay = $request->query->get('overlay');
         if (!$twig->getLoader()->exists('overlays/' . $overlay . '.html.twig')) {
-            return new Response('Invalid overlay selected');
+            $overlays = $this->getAvailableOverlays($kernel->getProjectDir());
+            return $this->render('invalidOverlay.html.twig', ['overlays' => $overlays]);
         }
 
         return $this->render('overlays/' . $overlay . '.html.twig');
     }
 
-    public function overlayFullAction(Environment $twig, Request $request) {
+    public function overlayFullAction(Environment $twig, Request $request, KernelInterface $kernel) {
         $overlay = $request->query->get('overlay');
         if (!$twig->getLoader()->exists('overlays/' . $overlay . '.html.twig')) {
-            return new Response('Invalid overlay selected');
+            $overlays = $this->getAvailableOverlays($kernel->getProjectDir());
+            return $this->render('invalidOverlay.html.twig', ['overlays' => $overlays]);
         }
 
         return $this->render('obsOverlayFull.html.twig', [
             'overlay' => $overlay
         ]);
+    }
+
+    public function getAvailableOverlays($project_dir)
+    {
+        $files = glob($project_dir . '/templates/overlays/*.html.twig');
+        $files = array_map(function ($file) {
+            $fileinfo = pathinfo($file);
+            return str_replace('.html.twig', '', $fileinfo['basename']);
+        }, $files);
+        return $files;
     }
 
     public function getSentimentAction(SentimentAnalysisService $sentimentService)

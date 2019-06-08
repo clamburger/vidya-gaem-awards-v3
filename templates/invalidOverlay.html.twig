@@ -1,0 +1,13 @@
+{% extends 'base/standard.html.twig' %}
+
+{% block title %}OBS Overlay{% endblock %}
+
+{% block content %}
+  <h2 class="text-danger">Invalid overlay selected</h2>
+
+  <ul>
+    {% for overlay in overlays %}
+      <li><a href="?overlay={{ overlay }}">{{ overlay }}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}

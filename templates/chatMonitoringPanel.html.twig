@@ -23,46 +23,69 @@
   <div class="row">
     <div class="col-md-4">
       <h2>Monitoring processes</h2>
-      <div class="status-block">
-        <strong><code>{{ twitch.supervisor.name }}</code></strong><br>
-        <code>{{ twitch.supervisor.description }}</code>
-        <div class="h4">
-          <div class="label label-{{ twitch.running ? 'success' : 'danger' }}">{{ twitch.supervisor.statename }}</div>
-        </div>
-        <form action="{{ path('updateSupervisorState') }}" method="POST">
-          <input type="hidden" name="service" value="twitch">
-          <input type="hidden" name="action" value="{{ twitch.running ? 'stop' : 'start' }}">
-          <button class="btn btn-default btn-sm" type="submit">{{ twitch.running ? 'Stop process' : 'Start process' }}</button>
-        </form>
-      </div>
-      <p>
-        The Twitch monitor should just work&trade; most of the time. If it's not working, restarting it should do the trick.
-      </p>
-      <div class="status-block">
-        <strong><code>{{ youtube.supervisor.name }}</code></strong><br>
-        <code>{{ youtube.supervisor.description }}</code>
-        <div class="h4">
-          <div class="label label-{{ youtube.running ? 'success' : 'danger' }}">{{ youtube.supervisor.statename }}</div>
-        </div>
-        <form action="{{ path('updateSupervisorState') }}" method="POST">
-          <input type="hidden" name="service" value="youtube">
-          <input type="hidden" name="action" value="{{ youtube.running ? 'stop' : 'start' }}">
-
-          <div class="form-group">
-            <label for="youtubeId" class="control-label">YouTube Video ID</label>
-            <input type="text" class="form-control" id="youtubeId" name="youtubeId" {{ youtube.running ? 'disabled' : 'required' }} value="{{ youtubeVideoId }}">
+      {% if supervisor %}
+        <div class="status-block">
+          <strong><code>{{ node.supervisor.name }}</code></strong><br>
+          <code>{{ node.supervisor.description }}</code>
+          <div class="h4">
+            <div class="label label-{{ node.running ? 'success' : 'danger' }}">{{ node.supervisor.statename }}</div>
           </div>
-          <button class="btn btn-default btn-sm" type="submit">{{ youtube.running ? 'Stop process' : 'Start process' }}</button>
-        </form>
-      </div>
-      {% if youtube.supervisor.statename in ['FATAL', 'BACKOFF'] %}
-      <p>
-        The YouTube monitor process was unable to start. Check that the video ID is correct and try again (it must point to an active livestream).
-      </p>
+          <form action="{{ path('updateSupervisorState') }}" method="POST">
+            <input type="hidden" name="service" value="twitch">
+            <input type="hidden" name="action" value="{{ node.running ? 'stop' : 'start' }}">
+            <button class="btn btn-default btn-sm" type="submit">{{ node.running ? 'Stop process' : 'Start process' }}</button>
+          </form>
+        </div>
+        <p>
+          This is the new NodeJS-based monitor.
+        </p>
+        <div class="status-block">
+          <strong><code>{{ twitch.supervisor.name }}</code></strong><br>
+          <code>{{ twitch.supervisor.description }}</code>
+          <div class="h4">
+            <div class="label label-{{ twitch.running ? 'success' : 'danger' }}">{{ twitch.supervisor.statename }}</div>
+          </div>
+          <form action="{{ path('updateSupervisorState') }}" method="POST">
+            <input type="hidden" name="service" value="twitch">
+            <input type="hidden" name="action" value="{{ twitch.running ? 'stop' : 'start' }}">
+            <button class="btn btn-default btn-sm" type="submit">{{ twitch.running ? 'Stop process' : 'Start process' }}</button>
+          </form>
+        </div>
+        <p>
+          The Twitch monitor should just work&trade; most of the time. If it's not working, restarting it should do the trick.
+        </p>
+        <div class="status-block">
+          <strong><code>{{ youtube.supervisor.name }}</code></strong><br>
+          <code>{{ youtube.supervisor.description }}</code>
+          <div class="h4">
+            <div class="label label-{{ youtube.running ? 'success' : 'danger' }}">{{ youtube.supervisor.statename }}</div>
+          </div>
+          <form action="{{ path('updateSupervisorState') }}" method="POST">
+            <input type="hidden" name="service" value="youtube">
+            <input type="hidden" name="action" value="{{ youtube.running ? 'stop' : 'start' }}">
+
+            <div class="form-group">
+              <label for="youtubeId" class="control-label">YouTube Video ID</label>
+              <input type="text" class="form-control" id="youtubeId" name="youtubeId" {{ youtube.running ? 'disabled' : 'required' }} value="{{ youtubeVideoId }}">
+            </div>
+            <button class="btn btn-default btn-sm" type="submit">{{ youtube.running ? 'Stop process' : 'Start process' }}</button>
+          </form>
+        </div>
+        {% if youtube.supervisor.statename in ['FATAL', 'BACKOFF'] %}
+        <p>
+          The YouTube monitor process was unable to start. Check that the video ID is correct and try again (it must point to an active livestream).
+        </p>
+        {% else %}
+        <p>
+          The YouTube video ID must point to an active livestream, or no chat messages will be read. To update the ID, first stop the process.
+        </p>
+        {% endif %}
       {% else %}
-      <p>
-        The YouTube video ID must point to an active livestream, or no chat messages will be read. To update the ID, first stop the process.
-      </p>
+        <div class="status-block">
+          <div class="h4">
+            <div class="label label-warning">Supervisor is not running</div>
+          </div>
+        </div>
       {% endif %}
 
       <h2>Links</h2>

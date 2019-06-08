@@ -9,6 +9,7 @@ use AppBundle\Service\SentimentAnalysisService;
 use Doctrine\ORM\EntityManagerInterface;
 use fXmlRpc\Client;
 use fXmlRpc\Exception\FaultException;
+use fXmlRpc\Exception\TransportException;
 use fXmlRpc\Transport\HttpAdapterTransport;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 use Http\Message\MessageFactory\GuzzleMessageFactory;
@@ -23,6 +24,7 @@ class ChatMonitoringPanelController extends Controller
 {
     const SUPERVISOR_PROCESS_NAME_TWITCH = 'vga-twitch-monitor';
     const SUPERVISOR_PROCESS_NAME_YOUTUBE = 'vga-youtube-monitor';
+    const SUPERVISOR_PROCESS_NAME_NODE = 'vga-node-monitor';
 
     private function getSupervisor()
     {
@@ -30,27 +32,40 @@ class ChatMonitoringPanelController extends Controller
             $this->getParameter('supervisor_user'), $this->getParameter('supervisor_password')
         ]]);
 
-        $client = new Client(
-            'http://127.0.0.1:9001/RPC2',
-            new HttpAdapterTransport(
-                new GuzzleMessageFactory(),
-                new GuzzleAdapter($guzzleClient)
-            )
-        );
+        try {
+            $client = new Client(
+                'http://127.0.0.1:9001/RPC2',
+                new HttpAdapterTransport(
+                    new GuzzleMessageFactory(),
+                    new GuzzleAdapter($guzzleClient)
+                )
+            );
 
-        $connector = new XmlRpc($client);
-        return new Supervisor($connector);
+            $connector = new XmlRpc($client);
+            $supervisor = new Supervisor($connector);
+            $supervisor->getAllProcessInfo();
+        } catch (TransportException $e) {
+            return null;
+        }
+
+        return $supervisor;
     }
 
     public function indexAction(EntityManagerInterface $em, ConfigService $configService)
     {
-        $twitch = $youtube = [];
+        $twitch = $youtube = $node = [];
 
-        $twitch['supervisor'] = $this->getSupervisor()->getProcessInfo(self::SUPERVISOR_PROCESS_NAME_TWITCH);
-        $twitch['running'] = $twitch['supervisor']['statename'] === 'RUNNING';
+        $supervisor = $this->getSupervisor();
+        if ($supervisor) {
+            $twitch['supervisor'] = $supervisor->getProcessInfo(self::SUPERVISOR_PROCESS_NAME_TWITCH);
+            $twitch['running'] = $twitch['supervisor']['statename'] === 'RUNNING';
 
-        $youtube['supervisor'] = $this->getSupervisor()->getProcessInfo(self::SUPERVISOR_PROCESS_NAME_YOUTUBE);
-        $youtube['running'] = $youtube['supervisor']['statename'] === 'RUNNING';
+            $youtube['supervisor'] = $supervisor->getProcessInfo(self::SUPERVISOR_PROCESS_NAME_YOUTUBE);
+            $youtube['running'] = $youtube['supervisor']['statename'] === 'RUNNING';
+
+            $node['supervisor'] = $supervisor->getProcessInfo(self::SUPERVISOR_PROCESS_NAME_TWITCH);
+            $node['running'] = $node['supervisor']['statename'] === 'RUNNING';
+        }
 
         $messages = $em->createQueryBuilder()
             ->select('cm')
@@ -64,9 +79,11 @@ class ChatMonitoringPanelController extends Controller
 
         return $this->render('chatMonitoringPanel.html.twig', [
             'title' => 'Chat Monitoring Panel',
+            'supervisor' => $supervisor,
             'twitch' => $twitch,
             'youtube' => $youtube,
             'youtubeVideoId' => $configService->getConfig()->getYoutubeStreamId(),
+            'node' => $node,
             'messages' => $messages
         ]);
     }

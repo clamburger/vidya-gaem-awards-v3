@@ -71,4 +71,17 @@ class SentimentAnalysisService
 
         return (int)(round($intensity / 120));
     }
+
+    public function getLastMesage(): string
+    {
+        $message = (string)$this->em->createQueryBuilder()
+            ->select('cm.message')
+            ->from(ChatMessage::class, 'cm')
+            ->orderBy('cm.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $message;
+    }
 }

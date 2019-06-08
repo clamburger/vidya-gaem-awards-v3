@@ -14,4 +14,9 @@ class StaticController extends Controller
 
         return $this->forward($defaultRoute->getDefault('_controller'), $defaultRoute->getDefaults());
     }
+
+    public function socketTestAction()
+    {
+        return $this->render('socketTest.html.twig');
+    }
 }

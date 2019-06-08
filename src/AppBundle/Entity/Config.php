@@ -49,7 +49,7 @@ class Config
     private $navbarItems = ['config' => 'Config'];
 
     /** @var array */
-    private $sentimentRules = [['exact' => [], 'contains' => [], 'regex' => []]];
+    private $sentimentRules = ['exact' => [], 'contains' => [], 'regex' => []];
 
     /** @var string */
     private $youtubeStreamId;

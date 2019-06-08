@@ -4,6 +4,7 @@
 /public/uploads
 /public/app.php
 /public/bundles
+/public/node
 /src/AppBundle/Command/lastYouTubeMessage.txt
 
 /.web-server-pid

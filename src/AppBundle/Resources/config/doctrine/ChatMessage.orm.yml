@@ -14,7 +14,7 @@ AppBundle\Entity\ChatMessage:
       type: string
       nullable: false
     message:
-      type: string
+      type: text
       nullable: false
     sentiment:
       type: integer

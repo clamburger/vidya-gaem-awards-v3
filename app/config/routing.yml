@@ -145,3 +145,7 @@ updateSupervisorState:
     path:     /twitch-chat/supervisor
     methods:  [POST]
     defaults: { _controller: AppBundle:ChatMonitoringPanel:updateSupervisorState }
+
+socketTest:
+    path:     /socket/client
+    defaults: { _controller: AppBundle:Static:socketTest }

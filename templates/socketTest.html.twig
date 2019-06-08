@@ -1,0 +1,93 @@
+{% extends 'base/standard.html.twig' %}
+
+{% block title %}Socket Test - Client{% endblock %}
+
+{% block head %}
+  <script src="https://vidyagaemawards.com/v3/node/socket.io/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/smoothie/1.34.0/smoothie.min.js"></script>
+  <script>
+    $(function () {
+      var socket = io.connect('https://vidyagaemawards.com', {path: '/v3/node/socket.io'});
+      $('form').submit(function(e){
+        e.preventDefault(); // prevents page reloading
+        socket.emit('chat message', $('#m').val());
+        // $('#m').val('');
+        return false;
+      });
+      socket.on('chat message', function(msg){
+        $('#messages').append($('<li>').text(msg));
+      });
+
+      socket.on('sentiment', function (msg) {
+        $('#messages').append($('<li>').text(JSON.stringify(msg)));
+        $("#messages")[0].scrollIntoView(false);
+        line1.append(new Date().getTime(), msg.sentiment);
+      });
+
+      var smoothie = new SmoothieChart({
+        millisPerPixel: 132,
+        maxValue: 100,
+        minValue: -100,
+        grid: {
+          borderVisible: false,
+          fillStyle: 'rgba(0,0,0,0)',
+          strokeStyle: 'rgba(0,0,0,0)'
+        },
+        labels: {
+          disabled: true,
+          fillStyle: 'rgb(0, 0, 0)'
+        },
+        tooltip: true
+      });
+      smoothie.streamTo(document.getElementById("chart"), 1000);
+
+      var line1 = new TimeSeries();
+
+      // Add to SmoothieChart
+      smoothie.addTimeSeries(line1, {
+        strokeStyle: 'rgb(0, 0, 0)',
+        lineWidth: 2,
+      });
+    });
+  </script>
+  <style>
+    #messages { list-style-type: none; margin: 0; padding: 0; }
+    #messages li { padding: 5px 15px; }
+    #messages li:nth-child(odd) { background: #eee; }
+    div.smoothie-chart-tooltip {
+      background: white;
+      padding: 1em;
+      margin-top: 20px;
+      font-family: consolas;
+      color: black;
+      font-size: 10px;
+      pointer-events: none;
+    }
+
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <div style="display: flex;">
+    <div class="panel panel-default" style="height: 400px; width: 55%; display: flex; flex-direction: column">
+      <div class="panel-heading">Output</div>
+      <div class="panel-body" id="message-container" style="padding: 0; flex-grow: 1; overflow-y: scroll;">
+        <ul id="messages"></ul>
+      </div>
+      <div class="panel-footer">
+        <form action="" style="display: flex;">
+          <input id="m" autocomplete="off" class="form-control" style="width: 200px; margin-right: 10px;">
+          <button class="btn btn-primary">Send Command</button>
+        </form>
+      </div>
+    </div>
+    <div class="panel panel-default" style="height: 400px; width: 40%; margin-left: 5%; display: flex; flex-direction: column;">
+      <div class="panel-heading">Graph</div>
+      <div class="panel-body" style="flex-grow: 1; padding: 0;">
+        <canvas id="chart" width="454" height="357"></canvas>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

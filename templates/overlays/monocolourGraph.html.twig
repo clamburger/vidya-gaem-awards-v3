@@ -10,6 +10,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 0;
+      margin: 0;
     }
 
     div.smoothie-chart-tooltip {
@@ -21,6 +23,23 @@
       font-size: 10px;
       pointer-events: none;
     }
+
+    .middle {
+      position: relative;
+    }
+
+    #sentiment {
+      position: absolute;
+      right: 5px;
+      bottom: 10px;
+      text-align: center;
+      font-size: 20px;
+      color: {{ app.request.query.get('color') ?: '#FFFFFF' }};
+      /*-webkit-text-stroke: 1px black;*/
+      /*text-shadow: 1px 1px black;*/
+      font-weight: bold;
+      transform-origin: top center;
+    }
   </style>
 
   <script src="https://vidyagaemawards.com/v3/node/socket.io/socket.io.js"></script>
@@ -31,6 +50,7 @@
       var $sentiment = $('#sentiment');
       var socket = io.connect('https://vidyagaemawards.com', {path: '/v3/node/socket.io'});
       socket.on('sentiment', function (msg) {
+        $sentiment.text(Math.round(msg.sentiment));
         line1.append(new Date().getTime(), msg.sentiment);
       });
 
@@ -55,7 +75,7 @@
 
       // Add to SmoothieChart
       smoothie.addTimeSeries(line1, {
-        strokeStyle: '{{ app.request.query.get('color') ?: '#000000' }}',
+        strokeStyle: '{{ app.request.query.get('color') ?: '#FFFFFF' }}',
         lineWidth: 2,
       });
     });
@@ -65,5 +85,8 @@
 {% block body %}
   <div class="middle">
     <canvas id="chart" width="{{ app.request.query.get('width') ?: 192 }}" height="{{ app.request.query.get('height') ?: 183 }}"></canvas>
+    <div id="sentiment">
+      0
+    </div>
   </div>
 {% endblock %}
